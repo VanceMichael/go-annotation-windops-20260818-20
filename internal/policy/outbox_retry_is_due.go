@@ -13,7 +13,7 @@ func EvaluateOutboxRetryIsDue(ctx Context) (Result, error) {
 		return Result{}, fault.New(fault.CodeInvalid, "policy.outbox_retry", "attempt counts are invalid")
 	}
 	attemptsRemaining := ctx.MaxAttempts - ctx.Attempts
-	if attemptsRemaining < 0 {
+	if attemptsRemaining <= 0 {
 		return deny("permanent_failure", "outbox job exhausted retry attempts"), nil
 	}
 	if ctx.Now.Before(ctx.Deadline) {
